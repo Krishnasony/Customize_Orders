@@ -1,5 +1,7 @@
 package i.krishnasony.customizeorders.utils
 
+import android.content.Context
+import android.widget.Toast
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
@@ -18,4 +20,8 @@ fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: Observ
 fun Double.getRupeeFormat():String{
     val format = NumberFormat.getCurrencyInstance(Locale("en", "in"))
     return format.format(this)
+}
+
+fun Context.showToast(message:String){
+    Toast.makeText(this,message,Toast.LENGTH_SHORT).show()
 }

@@ -2,15 +2,20 @@ package i.krishnasony.customizeorders.di
 
 import i.krishnasony.customizeorders.CustomizeOrderApplication
 import i.krishnasony.customizeorders.network.ApiService
+import i.krishnasony.customizeorders.viewModel.OrderViewModel
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
+import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 val appModule = module{
+    viewModel {
+        OrderViewModel()
+    }
     single {
        androidContext() as CustomizeOrderApplication
     }
