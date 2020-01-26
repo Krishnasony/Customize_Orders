@@ -9,7 +9,7 @@ import retrofit2.Response
 
 class OrderRepo(private val apiService: ApiService):RepoI {
 
-    override fun getOrders(apiCallback: ApiCallback<Orders>) {
+    override suspend fun getOrders(apiCallback: ApiCallback<Orders>) {
        apiService.getProductList().enqueue(object :Callback<Orders>{
            override fun onFailure(call: Call<Orders>, t: Throwable) {
                apiCallback.onFailure(t.localizedMessage)
@@ -19,9 +19,7 @@ class OrderRepo(private val apiService: ApiService):RepoI {
                if (response.isSuccessful){
                    response.body()?.let {
                        apiCallback.onSuccess(it)
-
                    }
-
                }else{
                    apiCallback.onFailure("Something Went Wrong")
                }
