@@ -9,13 +9,18 @@ import i.krishnasony.customizeorders.repo.OrderRepo
 
 class OrderViewModel:ViewModel() {
     val orderLiveData:MutableLiveData<Orders> = MutableLiveData()
-        suspend fun getOrders(repoI: OrderRepo){
+    val apiFailLiveData:MutableLiveData<String> = MutableLiveData()
+
+    suspend fun getOrders(repoI: OrderRepo){
             repoI.getOrders(object:ApiCallback<Orders>{
                 override fun onSuccess(t: Orders) {
                     orderLiveData.postValue(t)
+                    apiFailLiveData.postValue(null)
                 }
 
                 override fun onFailure(message: String) {
+                    apiFailLiveData.postValue(message)
+                    orderLiveData.postValue(null)
                     Log.e("ERROR: ",message)
                 }
 

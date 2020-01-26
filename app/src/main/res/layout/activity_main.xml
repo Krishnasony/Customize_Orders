@@ -5,6 +5,7 @@
     <data>
         <import type="i.krishnasony.customizeorders.data.Orders"/>
         <import type="i.krishnasony.customizeorders.utils.StringFormat"/>
+        <import type="android.view.View"/>
         <variable
             name="order"
             type="Orders" />
@@ -16,11 +17,48 @@
         <variable
             name="removeClickListener"
             type="android.view.View.OnClickListener" />
+        <variable
+            name="isVisible"
+            type="Boolean" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".MainActivity">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/price"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_small"
+            android:layout_marginTop="@dimen/margin_small"
+            android:background="@drawable/price_bg"
+            android:padding="@dimen/margin_small"
+            android:text="@string/price_25000"
+            android:textStyle="italic"
+            android:textAlignment="center"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/text_title_size"
+            app:layout_constraintEnd_toStartOf="@+id/quantity"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/quantity"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginEnd="@dimen/margin_small"
+            android:background="@drawable/price_bg"
+            android:padding="@dimen/margin_small"
+            android:text="@string/quantity"
+            android:textStyle="italic"
+            android:textAlignment="center"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/text_title_size"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/price"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -46,7 +84,7 @@
             app:cardCornerRadius="@dimen/margin_large"
             app:cardBackgroundColor="@color/colorWhite"
             android:layout_margin="@dimen/margin_small"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            app:layout_constraintTop_toBottomOf="@+id/price"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
@@ -54,70 +92,37 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/price"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/margin_small"
-                    android:layout_marginTop="@dimen/margin_small"
-                    android:background="@drawable/price_bg"
-                    android:padding="@dimen/margin_small"
-                    android:text="@string/price_25000"
-                    android:textStyle="italic"
-                    android:textAlignment="center"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/text_title_size"
-                    app:layout_constraintEnd_toStartOf="@+id/quantity"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/quantity"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_small"
-                    android:layout_marginEnd="@dimen/margin_small"
-                    android:background="@drawable/price_bg"
-                    android:padding="@dimen/margin_small"
-                    android:text="@string/quantity"
-                    android:textStyle="italic"
-                    android:textAlignment="center"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/text_title_size"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/price"
-                    app:layout_constraintTop_toTopOf="parent" />
-
                 <TextView
                     android:id="@+id/item_name"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginStart="@dimen/margin_large"
                     android:layout_marginTop="@dimen/margin_small"
-                    tools:text="@string/item_name"
+                    android:layout_marginEnd="@dimen/margin_small"
                     android:text="@{String.valueOf(`Item Name: `+order.name)}"
                     android:textColor="@color/color_black"
                     android:textSize="@dimen/text_title_size"
                     android:textStyle="bold|italic"
                     app:layout_constraintEnd_toStartOf="@+id/veg_non_veg_icon"
-                    app:layout_constraintStart_toStartOf="@+id/price"
-                    app:layout_constraintTop_toBottomOf="@+id/price" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_goneMarginStart="@dimen/margin_small"
+                    tools:text="@string/item_name" />
 
                 <TextView
                     android:id="@+id/desc"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
                     android:layout_marginTop="@dimen/margin_small"
                     android:layout_marginEnd="@dimen/margin_small"
                     android:layout_marginBottom="@dimen/margin_large"
                     android:text="@{String.valueOf(`Desc: `+order.description)}"
                     android:textColor="@color/color_black"
-                    android:textSize="@dimen/text_title_size"
+                    android:textSize="16sp"
                     android:textStyle="italic"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@+id/price"
+                    app:layout_constraintStart_toStartOf="@+id/item_name"
                     app:layout_constraintTop_toBottomOf="@+id/item_name"
                     tools:text="@string/desc" />
 
@@ -131,7 +136,7 @@
                     android:background="@{order.isVeg()?@drawable/veg : @drawable/non_veg}"
                     app:layout_constraintBottom_toBottomOf="@+id/item_name"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/quantity" />
+                    app:layout_constraintTop_toTopOf="@+id/item_name"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -171,6 +176,14 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/add"
             app:layout_constraintTop_toTopOf="@+id/add" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/visibilityGroup"
+            tools:visibility="visible"
+            android:visibility="@{isVisible ? View.VISIBLE : View.GONE}"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:constraint_referenced_ids="itemCard,price,quantity"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
