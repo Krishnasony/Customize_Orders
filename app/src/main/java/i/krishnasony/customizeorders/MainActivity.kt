@@ -1,6 +1,7 @@
 package i.krishnasony.customizeorders
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -27,6 +28,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         dataBinding = DataBindingUtil.setContentView(this,R.layout.activity_main)
+        with(dataBinding){
+            addClickListener = onAddClickListener
+            removeClickListener = onRemoveClickListener
+        }
         setToolbar()
         getDataFromApi()
     }
@@ -38,11 +43,20 @@ class MainActivity : AppCompatActivity() {
             orderViewModel.orderLiveData.observeOnce(this@MainActivity, Observer {
                 order->
                 order?.let {
+                    dataBinding.order = it
                     this@MainActivity.showToast(it.name.toString())
                 }
             })
 
         }
+    }
+
+    private val onAddClickListener = View.OnClickListener {
+
+    }
+
+    private val onRemoveClickListener = View.OnClickListener {
+
     }
 
     private fun setToolbar(){

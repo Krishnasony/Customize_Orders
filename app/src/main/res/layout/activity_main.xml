@@ -2,6 +2,21 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <import type="i.krishnasony.customizeorders.data.Orders"/>
+        <import type="i.krishnasony.customizeorders.utils.StringFormat"/>
+        <variable
+            name="order"
+            type="Orders" />
+
+        <variable
+            name="addClickListener"
+            type="android.view.View.OnClickListener" />
+
+        <variable
+            name="removeClickListener"
+            type="android.view.View.OnClickListener" />
+    </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -25,7 +40,11 @@
             android:clickable="true"
             android:focusable="true"
             android:paddingBottom="@dimen/margin_large"
-            android:background="@drawable/item_drawable_bg"
+            app:cardElevation="@dimen/margin_small"
+            app:strokeColor="@color/colorAccent"
+            app:strokeWidth="0.5dp"
+            app:cardCornerRadius="@dimen/margin_large"
+            app:cardBackgroundColor="@color/colorWhite"
             android:layout_margin="@dimen/margin_small"
             app:layout_constraintTop_toBottomOf="@+id/toolbar"
             app:layout_constraintStart_toStartOf="parent"
@@ -37,30 +56,37 @@
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/price"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_small"
                     android:layout_marginTop="@dimen/margin_small"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:layout_width="wrap_content"
-                    android:layout_margin="@dimen/margin_small"
                     android:background="@drawable/price_bg"
-                    android:textColor="@color/colorWhite"
                     android:padding="@dimen/margin_small"
-                    android:textSize="@dimen/text_title_size"
                     android:text="@string/price_25000"
-                    android:layout_height="wrap_content"/>
+                    android:textStyle="italic"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/text_title_size"
+                    app:layout_constraintEnd_toStartOf="@+id/quantity"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/quantity"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_small"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:layout_width="wrap_content"
-                    android:layout_margin="@dimen/margin_small"
+                    android:layout_marginEnd="@dimen/margin_small"
                     android:background="@drawable/price_bg"
-                    android:textColor="@color/colorWhite"
                     android:padding="@dimen/margin_small"
-                    android:textSize="@dimen/text_title_size"
                     android:text="@string/quantity"
-                    android:layout_height="wrap_content"/>
+                    android:textStyle="italic"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/text_title_size"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/price"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/item_name"
@@ -68,33 +94,41 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="@dimen/margin_small"
-                    android:text="@string/item_name"
+                    tools:text="@string/item_name"
+                    android:text="@{String.valueOf(`Item Name: `+order.name)}"
                     android:textColor="@color/color_black"
                     android:textSize="@dimen/text_title_size"
                     android:textStyle="bold|italic"
                     app:layout_constraintEnd_toStartOf="@+id/veg_non_veg_icon"
                     app:layout_constraintStart_toStartOf="@+id/price"
                     app:layout_constraintTop_toBottomOf="@+id/price" />
+
                 <TextView
                     android:id="@+id/desc"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
+                    android:layout_marginTop="@dimen/margin_small"
+                    android:layout_marginEnd="@dimen/margin_small"
+                    android:layout_marginBottom="@dimen/margin_large"
+                    android:text="@{String.valueOf(`Desc: `+order.description)}"
                     android:textColor="@color/color_black"
                     android:textSize="@dimen/text_title_size"
                     android:textStyle="italic"
-                    android:layout_marginTop="@dimen/margin_small"
-                    android:text="@string/desc"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/price"
-                    app:layout_constraintTop_toBottomOf="@+id/item_name" />
+                    app:layout_constraintTop_toBottomOf="@+id/item_name"
+                    tools:text="@string/desc" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/veg_non_veg_icon"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_marginTop="@dimen/margin_small"
                     android:layout_marginEnd="@dimen/margin_small"
-                    android:background="@drawable/non_veg"
+                    tools:background="@drawable/veg"
+                    android:background="@{order.isVeg()?@drawable/veg : @drawable/non_veg}"
                     app:layout_constraintBottom_toBottomOf="@+id/item_name"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/quantity" />
@@ -105,7 +139,7 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <com.google.android.material.button.MaterialButton
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/add"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -116,11 +150,12 @@
             android:text="@string/add_to_cart"
             android:textColor="@color/colorWhite"
             android:textStyle="italic"
+            android:onClick="@{addClickListener}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/remove"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <com.google.android.material.button.MaterialButton
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/remove"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -131,6 +166,7 @@
             android:text="@string/remove"
             android:textColor="@color/colorWhite"
             android:textStyle="italic"
+            android:onClick="@{removeClickListener}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/add"
