@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Customize Orders</string>
+    <string name="price_25000">Price : 25000</string>
+    <string name="desc">Desc: A dialogue must be shown to select the crust and size from lists of available single-choice options</string>
+    <string name="item_name">Item Name : Non Veg</string>
+    <string name="quantity">Quantity : 2</string>
+    <string name="add_to_cart">Add to cart</string>
+    <string name="remove">Remove</string>
 </resources>

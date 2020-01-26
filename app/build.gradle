@@ -78,6 +78,12 @@ dependencies {
     kapt 'androidx.room:room-compiler:2.2.3'
     kapt 'androidx.lifecycle:lifecycle-compiler:2.2.0'
 
+    //material design & cardView
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
+
+
+
 
 
 }

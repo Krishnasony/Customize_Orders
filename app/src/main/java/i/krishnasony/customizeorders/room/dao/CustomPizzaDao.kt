@@ -9,7 +9,7 @@ import i.krishnasony.customizeorders.room.entity.CustomPizza
 @Dao
 interface CustomPizzaDao {
     @Insert
-    fun insertCutomizePizza(vararg customPizza: CustomPizza)
+    fun insertCustomPizza(vararg customPizza: CustomPizza)
 
     @Query("SELECT * FROM custom_pizza WHERE item_id LIKE :itemId")
     fun getCustomizeData(itemId:String):LiveData<List<CustomPizza>>
