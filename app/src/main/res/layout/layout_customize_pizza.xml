@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
-    android:layout_height="400dp"
-    android:layout_margin="32dp"
+    android:layout_height="match_parent"
     android:background="@color/colorWhite"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -38,6 +37,7 @@
                 android:padding="@dimen/margin_small"
                 app:layout_constraintBottom_toTopOf="@+id/title_size"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/title"
                 tools:listitem="@layout/layout_recycler_item" />

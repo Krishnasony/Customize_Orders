@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -39,12 +40,20 @@ class CustomPizzaListDialog : DialogFragment(),RemoveClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initView()
+        getCustomPizzaList()
+    }
+
+    private fun initView() {
         val recyclerView = rootView.findViewById<RecyclerView>(R.id.customPizzaRecyclerView)
+        val cancel = rootView.findViewById<AppCompatButton>(R.id.cancel)
         customizeRepo= CustomizeRepo(database.customPizzaDao)
         adapter = CustomPizzaAdapter(this,context!!,customPizzaList)
         recyclerView.layoutManager = LinearLayoutManager(context!!,LinearLayoutManager.VERTICAL,false)
         recyclerView.adapter = adapter
-        getCustomPizzaList()
+        cancel.setOnClickListener {
+            dialog?.dismiss()
+        }
     }
 
     private fun getCustomPizzaList() {
@@ -58,6 +67,16 @@ class CustomPizzaListDialog : DialogFragment(),RemoveClickListener {
                     adapter.notifyDataSetChanged()
                 }
             })
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val d = dialog
+        if (d != null) {
+            val width = ViewGroup.LayoutParams.MATCH_PARENT
+            val height = ViewGroup.LayoutParams.MATCH_PARENT
+            d.window?.setLayout(width, height)
         }
     }
 

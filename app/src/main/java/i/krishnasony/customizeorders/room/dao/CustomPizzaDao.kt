@@ -2,12 +2,12 @@ package i.krishnasony.customizeorders.room.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import i.krishnasony.customizeorders.room.entity.Crust
 import i.krishnasony.customizeorders.room.entity.CustomPizza
 import i.krishnasony.customizeorders.room.entity.Size
-import retrofit2.http.DELETE
 
 @Dao
 interface CustomPizzaDao {
@@ -23,7 +23,7 @@ interface CustomPizzaDao {
     @Query("SELECT id FROM crust GROUP BY id ORDER BY id DESC")
     fun getCrustId():String?
 
-    @DELETE
+    @Delete
     fun delete(customPizza: CustomPizza)
 
 

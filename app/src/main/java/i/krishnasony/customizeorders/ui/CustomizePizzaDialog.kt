@@ -48,7 +48,6 @@ class CustomizePizzaDialog:AppCompatDialogFragment(),ClickInterface {
             defaultSize = it.getString(DEFAULT_SIZE) as String
 
         }
-        setStyle(DialogFragment.STYLE_NORMAL, R.style.dialog_theme)
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         rootView= inflater.inflate(R.layout.layout_customize_pizza, container,false)

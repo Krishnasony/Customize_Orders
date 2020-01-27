@@ -7,17 +7,17 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/title"
-        android:textStyle="bold|italic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="@string/customize_pizza_title"
+        android:textAlignment="center"
         android:textColor="@color/color_black"
+        android:textSize="@dimen/text_title_size"
+        android:textStyle="bold|italic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="@dimen/margin_large"
-        android:textAlignment="center"
-        android:textSize="@dimen/text_title_size"
-        android:text="@string/customize_pizza_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/customPizzaRecyclerView"
@@ -28,6 +28,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title"
         tools:listitem="@layout/layout_custom_pizza_recycler_item" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/cancel"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:backgroundTint="@color/colorAccent"
+        android:background="@drawable/ic_close_black_24dp"
+        app:layout_constraintBottom_toTopOf="@+id/customPizzaRecyclerView"
+        app:layout_constraintEnd_toEndOf="@+id/title"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
