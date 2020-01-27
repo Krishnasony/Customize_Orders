@@ -126,7 +126,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun getCustomPizza() {
+    fun getCustomPizza() {
         var totalAmount = 0.0
         var quantity = 0
         GlobalScope.launch(Dispatchers.Main) {

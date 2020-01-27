@@ -9,6 +9,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import i.krishnasony.customizeorders.MainActivity
 import i.krishnasony.customizeorders.R
 import i.krishnasony.customizeorders.repo.CustomizeRepo
 import i.krishnasony.customizeorders.room.database.AppDataBase
@@ -90,6 +91,7 @@ class CustomPizzaListDialog : DialogFragment(),RemoveClickListener {
         GlobalScope.launch (Dispatchers.IO){
             orderViewModel.deleteCustomPizza(customPizza,customizeRepo)
         }
+        (activity as MainActivity).getCustomPizza()
     }
 
 
