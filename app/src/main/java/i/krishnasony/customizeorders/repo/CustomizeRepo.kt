@@ -32,4 +32,12 @@ class CustomizeRepo(var dao:CustomPizzaDao) {
         dao.delete(customPizza)
     }
 
+    suspend fun getCrust(crustId: String) = withContext(Dispatchers.IO){
+        dao.getCrust(crustId)
+    }
+
+    suspend fun getSize(sizeId: String) = withContext(Dispatchers.IO){
+        dao.getSize(sizeId)
+    }
+
 }

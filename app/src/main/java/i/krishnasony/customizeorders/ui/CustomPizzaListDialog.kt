@@ -82,9 +82,17 @@ class CustomPizzaListDialog : DialogFragment(),RemoveClickListener {
     }
 
     override fun onItemRemoved(customPizza: CustomPizza,pos:Int) {
-        customPizzaList.remove(customPizza)
-        adapter.notifyDataSetChanged()
-        deleteCustomPizzaItem(customPizza)
+        if (customPizza.quantity>1){
+            customPizzaList[pos].quantity -= 1
+            adapter.notifyItemChanged(pos)
+            database.customPizzaDao.updateCustomPizza(customPizza.copy(quantity = customPizza.quantity-1))
+            (activity as MainActivity).getCustomPizza()
+        }else{
+            customPizzaList.remove(customPizza)
+            adapter.notifyDataSetChanged()
+            deleteCustomPizzaItem(customPizza)
+        }
+
     }
 
     private fun deleteCustomPizzaItem(customPizza: CustomPizza) {

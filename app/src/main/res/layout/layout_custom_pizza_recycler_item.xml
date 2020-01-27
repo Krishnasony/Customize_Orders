@@ -10,6 +10,9 @@
         <variable
             name="onRemove"
             type="android.view.View.OnClickListener" />
+        <variable
+            name="temp"
+            type="i.krishnasony.customizeorders.data.Temp" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -74,7 +77,7 @@
             android:textAlignment="center"
             android:textColor="@color/colorWhite"
             android:textStyle="bold"
-            android:tag="@{customPizza}"
+            android:tag="@{temp}"
             android:onClick="@{onRemove}"
             app:layout_constraintBottom_toBottomOf="@+id/Price"
             app:layout_constraintEnd_toEndOf="parent"

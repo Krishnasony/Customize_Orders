@@ -43,7 +43,6 @@ class MainActivity : AppCompatActivity() {
     private var sizeList:ArrayList<Size> = arrayListOf()
     private var defaultCrust= ""
     private var defaultSize = ""
-    private var customPizza = CustomPizza()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,20 +79,11 @@ class MainActivity : AppCompatActivity() {
                         crust?.let {
                             if (crust.id.toString() == defaultCrust){
                                 defaultSize = crust.defaultSize.toString()
-                                customPizza.copy(crustName = crust.name.toString())
                             }
 
                             crustLists.add(Crust(id = crust.id.toString(),name = crust.name!!,defaultSize = crust.defaultSize!!))
                             crust.sizes?.forEach {size->
                                 size?.let {
-                                    if (defaultSize == size.id.toString()){
-                                        customPizza.copy(itemId = "1",sizeName = size.name.toString(),price = size.price!!,quantity = 1)
-                                        dataBinding.price.text = getString(R.string.price_25000).plus(customPizza.price.getRupeeFormat())
-                                        if (!checkDataBaseData){
-                                            insertCustomPizza()
-                                        }
-                                    }
-
                                     sizeList.add(Size(id = size.id.toString(),name = size.name.toString(),price = size.price!!,crustId = crust.id.toString() ))
                                 }
                             }
@@ -135,21 +125,14 @@ class MainActivity : AppCompatActivity() {
                 list->
                 list?.let {
                     list.forEach {
-                        totalAmount += it.price
-                        quantity +=1
+                        totalAmount += it.price * it.quantity
+                        quantity +=it.quantity
                     }
                 }
             })
             delay(100)
             dataBinding.price.text = getString(R.string.price_25000).plus(totalAmount.getRupeeFormat())
             dataBinding.quantity.text = getString(R.string.quantity).plus(quantity.toString())
-        }
-    }
-
-    private fun insertCustomPizza() {
-        val repo = CustomizeRepo(dao = database.customPizzaDao)
-        GlobalScope.launch(Dispatchers.IO) {
-            orderViewModel.insertCustomPizza(repo,customPizza)
         }
     }
 

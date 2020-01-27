@@ -17,6 +17,8 @@ class OrderViewModel:ViewModel() {
     val apiFailLiveData:MutableLiveData<String> = MutableLiveData()
     lateinit var customPizzaList:LiveData<List<CustomPizza>>
     lateinit var sizelist:LiveData<List<Size>>
+    lateinit var crustLiveData:LiveData<Crust>
+    lateinit var sizeLiveData: LiveData<Size>
 
     suspend fun getOrders(repoI: OrderRepo){
             repoI.getOrders(object:ApiCallback<Orders>{
@@ -57,6 +59,14 @@ class OrderViewModel:ViewModel() {
 
     suspend fun deleteCustomPizza(customPizza: CustomPizza,repo: CustomizeRepo){
         repo.deleteCustomPizza(customPizza)
+    }
+
+    suspend fun getCrust(crustId: String,repo: CustomizeRepo){
+        crustLiveData = repo.getCrust(crustId)
+    }
+
+    suspend fun getSize(sizeId: String,repo: CustomizeRepo){
+        sizeLiveData = repo.getSize(sizeId)
     }
 
 }

@@ -9,11 +9,11 @@ import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import i.krishnasony.customizeorders.BR
 import i.krishnasony.customizeorders.R
+import i.krishnasony.customizeorders.data.Temp
 import i.krishnasony.customizeorders.room.entity.CustomPizza
 
 
 class CustomPizzaAdapter(private val mView:RemoveClickListener, var context: Context, var customPizzaList:ArrayList<CustomPizza>):RecyclerView.Adapter<CustomPizzaAdapter.PizzaViewHolder>() {
-    private var pos:Int = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PizzaViewHolder {
         return PizzaViewHolder(LayoutInflater.from(context).inflate(R.layout.layout_custom_pizza_recycler_item,parent,false))
@@ -28,7 +28,7 @@ class CustomPizzaAdapter(private val mView:RemoveClickListener, var context: Con
     }
 
     private val onRemoveClickListener = View.OnClickListener {
-        mView.onItemRemoved(it.tag as CustomPizza,pos)
+        mView.onItemRemoved((it.tag as Temp).customPizza,(it.tag as Temp).position )
     }
 
 
@@ -37,9 +37,9 @@ class CustomPizzaAdapter(private val mView:RemoveClickListener, var context: Con
             customPizza: CustomPizza,
             position: Int
         ) {
-            pos = position
             binding.setVariable(BR.customPizza,customPizza)
             binding.setVariable(BR.onRemove,onRemoveClickListener)
+            binding.setVariable(BR.temp,Temp(customPizza,position))
 
         }
         private val binding: ViewDataBinding = DataBindingUtil.bind(itemView)!!

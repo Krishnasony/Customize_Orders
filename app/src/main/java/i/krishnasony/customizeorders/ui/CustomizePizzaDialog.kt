@@ -5,10 +5,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.appcompat.widget.AppCompatButton
-import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import i.krishnasony.customizeorders.MainActivity
 import i.krishnasony.customizeorders.R
 import i.krishnasony.customizeorders.repo.CustomizeRepo
 import i.krishnasony.customizeorders.room.database.AppDataBase
@@ -39,6 +39,7 @@ class CustomizePizzaDialog:AppCompatDialogFragment(),ClickInterface {
     private var size = Size()
     private var defaultCrust= ""
     private var defaultSize = ""
+    private lateinit var repo: CustomizeRepo
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,9 +47,31 @@ class CustomizePizzaDialog:AppCompatDialogFragment(),ClickInterface {
             crustList = it.getParcelableArrayList<Crust>(CRUST) as ArrayList<Crust>
             defaultCrust = it.getString(DEFAULT_CRUST) as String
             defaultSize = it.getString(DEFAULT_SIZE) as String
+            repo = CustomizeRepo(database.customPizzaDao)
+            getCrustAndSize()
 
         }
     }
+
+    private fun getCrustAndSize() {
+        GlobalScope.launch (Dispatchers.Main){
+            orderViewModel.getCrust(crustId = defaultCrust,repo = repo)
+            orderViewModel.getSize(sizeId = defaultSize,repo = repo)
+            orderViewModel.crustLiveData.observeOnce(this@CustomizePizzaDialog, Observer {
+                crust->
+                crust?.let {
+                    this@CustomizePizzaDialog.crust = crust
+                }
+            })
+            orderViewModel.sizeLiveData.observeOnce(this@CustomizePizzaDialog, Observer {
+                    size->
+                size?.let {
+                    this@CustomizePizzaDialog.size = size
+                }
+            })
+        }
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         rootView= inflater.inflate(R.layout.layout_customize_pizza, container,false)
 
@@ -89,10 +112,16 @@ class CustomizePizzaDialog:AppCompatDialogFragment(),ClickInterface {
     }
 
     private fun addCustomPizza() {
-        val repo = CustomizeRepo(database.customPizzaDao)
+        val customPizza =  CustomPizza(itemId = "1",crustName = crust.name,price = size.price,sizeName = size.name,quantity = 1)
+        val newCustomPizza = database.customPizzaDao.checkCustomPizzaExist(customPizza.crustName,customPizza.sizeName,customPizza.price)
         GlobalScope.launch(Dispatchers.IO) {
-            orderViewModel.insertCustomPizza(repo,customPizza = CustomPizza(itemId = "1",crustName = crust.name,price = size.price,sizeName = size.name,quantity = 1))
+            newCustomPizza?.let {
+                  database.customPizzaDao.updateCustomPizza(newCustomPizza.copy(quantity = newCustomPizza.quantity+1))
+            }?:run{
+                orderViewModel.insertCustomPizza(repo,customPizza = customPizza)
+            }
         }
+        (activity as MainActivity).getCustomPizza()
     }
 
 
@@ -109,12 +138,10 @@ class CustomizePizzaDialog:AppCompatDialogFragment(),ClickInterface {
     override fun onRadioButtonClicked(crust: Crust) {
         this.crust =crust
         sizeList.clear()
-        adapter?.notifyDataSetChanged()
         getSizesForCrusts()
     }
 
     private fun getSizesForCrusts(){
-        val repo = CustomizeRepo(dao = database.customPizzaDao)
         GlobalScope.launch(Dispatchers.Main) {
             orderViewModel.getSizesOfCrust(repo,crust.id)
             orderViewModel.sizelist.observeOnce(this@CustomizePizzaDialog, Observer {
