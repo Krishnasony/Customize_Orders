@@ -23,16 +23,19 @@ import i.krishnasony.customizeorders.utils.showToast
 import i.krishnasony.customizeorders.viewModel.OrderViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
     private lateinit var dataBinding: ActivityMainBinding
+    private lateinit var repo: CustomizeRepo
     /** koin injection for database, retrofit apiService and viewModel */
     private val database:AppDataBase by inject()
     private val apiService:ApiService by inject()
     private val orderViewModel:OrderViewModel by viewModel()
+
     private lateinit var progressBar:AlertDialog
     private var visibility = true
     private var checkDataBaseData = false
@@ -41,6 +44,7 @@ class MainActivity : AppCompatActivity() {
     private var defaultCrust= ""
     private var defaultSize = ""
     private var customPizza = CustomPizza()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         dataBinding = DataBindingUtil.setContentView(this,R.layout.activity_main)
@@ -50,6 +54,7 @@ class MainActivity : AppCompatActivity() {
             isVisible = visibility
         }
         progressBar = this.progressDialog("Loading...")
+        repo = CustomizeRepo(database.customPizzaDao)
         setToolbar()
         checkDataBaseEntry()
         getDataFromApi()
@@ -60,10 +65,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getDataFromApi() {
+        val repo = OrderRepo(apiService)
         visibility = false
         dataBinding.isVisible = visibility
         progressBar.show()
-        val repo = OrderRepo(apiService)
         GlobalScope.launch(Dispatchers.Main) {
             orderViewModel.getOrders(repo)
             orderViewModel.orderLiveData.observeOnce(this@MainActivity, Observer {
@@ -77,11 +82,12 @@ class MainActivity : AppCompatActivity() {
                                 defaultSize = crust.defaultSize.toString()
                                 customPizza.copy(crustName = crust.name.toString())
                             }
+
                             crustLists.add(Crust(id = crust.id.toString(),name = crust.name!!,defaultSize = crust.defaultSize!!))
                             crust.sizes?.forEach {size->
                                 size?.let {
                                     if (defaultSize == size.id.toString()){
-                                        customPizza.copy(itemId = "1",sizeName = size.name.toString(),price = size.price!!)
+                                        customPizza.copy(itemId = "1",sizeName = size.name.toString(),price = size.price!!,quantity = 1)
                                         dataBinding.price.text = getString(R.string.price_25000).plus(customPizza.price.getRupeeFormat())
                                         if (!checkDataBaseData){
                                             insertCustomPizza()
@@ -121,7 +127,23 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getCustomPizza() {
-
+        var totalAmount = 0.0
+        var quantity = 0
+        GlobalScope.launch(Dispatchers.Main) {
+            orderViewModel.getCustomPizza(repo)
+            orderViewModel.customPizzaList.observeOnce(this@MainActivity, Observer {
+                list->
+                list?.let {
+                    list.forEach {
+                        totalAmount += it.price
+                        quantity +=1
+                    }
+                }
+            })
+            delay(100)
+            dataBinding.price.text = getString(R.string.price_25000).plus(totalAmount.getRupeeFormat())
+            dataBinding.quantity.text = getString(R.string.quantity).plus(quantity.toString())
+        }
     }
 
     private fun insertCustomPizza() {
@@ -135,7 +157,6 @@ class MainActivity : AppCompatActivity() {
         crustLists: ArrayList<Crust>,
         sizeList: ArrayList<Size>
     ) {
-        val repo = CustomizeRepo(dao = database.customPizzaDao)
         GlobalScope.launch(Dispatchers.IO) {
            orderViewModel.insertCrustAndSize(repo,crustLists,sizeList)
         }

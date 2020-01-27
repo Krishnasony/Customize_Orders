@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,7 +13,9 @@ import i.krishnasony.customizeorders.R
 import i.krishnasony.customizeorders.repo.CustomizeRepo
 import i.krishnasony.customizeorders.room.database.AppDataBase
 import i.krishnasony.customizeorders.room.entity.Crust
+import i.krishnasony.customizeorders.room.entity.CustomPizza
 import i.krishnasony.customizeorders.room.entity.Size
+import i.krishnasony.customizeorders.ui.adapter.CrustPizzaAdapter
 import i.krishnasony.customizeorders.utils.observeOnce
 import i.krishnasony.customizeorders.viewModel.OrderViewModel
 import kotlinx.coroutines.Dispatchers
@@ -28,7 +31,7 @@ class CustomizePizzaDialog:AppCompatDialogFragment(),ClickInterface {
     private lateinit var rootView: View
     private var crustList:ArrayList<Crust> = arrayListOf()
     private var sizeList:ArrayList<Size> = arrayListOf()
-    private var adapter:CrustPizzaAdapter ? = null
+    private var adapter: CrustPizzaAdapter? = null
     private var sizeAdapter:SizeAdapter ? = null
     private val database:AppDataBase by inject()
     private val orderViewModel: OrderViewModel by viewModel()
@@ -55,17 +58,42 @@ class CustomizePizzaDialog:AppCompatDialogFragment(),ClickInterface {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initView()
+        getSizesForCrusts()
+    }
+
+    private fun initView() {
         val crustRv = rootView.findViewById<RecyclerView>(R.id.crustRecyclerView)
         val sizeRv = rootView.findViewById<RecyclerView>(R.id.sizeRecyclerView)
+        val addToCart = rootView.findViewById<AppCompatButton>(R.id.add)
+        val cancel = rootView.findViewById<AppCompatButton>(R.id.cancel)
+        addToCart.setOnClickListener {
+            addCustomPizza()
+            dialog?.dismiss()
+        }
+        cancel.setOnClickListener {
+            dialog?.dismiss()
+        }
         sizeAdapter = SizeAdapter(this@CustomizePizzaDialog,context!!,sizeList,checkId = crust.defaultSize.toString())
         sizeRv.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
         sizeRv.adapter = sizeAdapter
-        adapter = CrustPizzaAdapter(this,context!!,crustList,checkId = defaultCrust)
+        adapter = CrustPizzaAdapter(
+            this,
+            context!!,
+            crustList,
+            checkId = defaultCrust
+        )
         crustRv.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
         crustRv.adapter = adapter
         crust.id = defaultCrust
         crust.defaultSize = if (defaultSize.isNotEmpty()) defaultSize.toInt() else 0
-        getSizesForCrusts()
+    }
+
+    private fun addCustomPizza() {
+        val repo = CustomizeRepo(database.customPizzaDao)
+        GlobalScope.launch(Dispatchers.IO) {
+            orderViewModel.insertCustomPizza(repo,customPizza = CustomPizza(itemId = "1",crustName = crust.name,price = size.price,sizeName = size.name,quantity = 1))
+        }
     }
 
 

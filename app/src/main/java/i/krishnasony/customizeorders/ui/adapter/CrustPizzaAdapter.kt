@@ -1,4 +1,4 @@
-package i.krishnasony.customizeorders.ui
+package i.krishnasony.customizeorders.ui.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -7,11 +7,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import i.krishnasony.customizeorders.R
 import i.krishnasony.customizeorders.room.entity.Crust
+import i.krishnasony.customizeorders.ui.ClickInterface
 import kotlinx.android.synthetic.main.layout_recycler_item.view.*
 
 
 
-class CrustPizzaAdapter(private val mView:ClickInterface, var context: Context, var crustList:ArrayList<Crust>, var checkId:String):RecyclerView.Adapter<CrustPizzaAdapter.PizzaViewHolder>() {
+class CrustPizzaAdapter(private val mView: ClickInterface, var context: Context, var crustList:ArrayList<Crust>, var checkId:String):RecyclerView.Adapter<CrustPizzaAdapter.PizzaViewHolder>() {
     private var mLastSelectedPosition = -1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PizzaViewHolder {

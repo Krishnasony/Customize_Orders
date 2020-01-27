@@ -20,8 +20,12 @@ class CustomizeRepo(var dao:CustomPizzaDao) {
         dao.insertCrust(crust)
     }
 
-    suspend fun getSizes(crusId:String) = withContext(Dispatchers.IO){
-        dao.getSizes(crusId)
+    suspend fun getSizes(crustId:String) = withContext(Dispatchers.IO){
+        dao.getSizes(crustId)
+    }
+
+    suspend fun getCustomPizza() = withContext(Dispatchers.IO){
+        dao.getCustomizeData(itemId = "1")
     }
 
 }

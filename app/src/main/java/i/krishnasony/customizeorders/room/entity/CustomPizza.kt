@@ -10,18 +10,20 @@ import kotlinx.android.parcel.Parcelize
 @Entity(tableName = "custom_pizza")
 @Parcelize
 data class CustomPizza(
-    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") @SerializedName("id") var id: Int,
+    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") @SerializedName("id") var id: Int=0,
     @ColumnInfo(name = "item_id") @SerializedName("item_id") var itemId: String,
     @ColumnInfo(name = "crust_name") @SerializedName("crust_name") var crustName: String,
     @ColumnInfo(name = "price") @SerializedName(value = "price") var price: Double,
-    @ColumnInfo(name = "size_name") @SerializedName("size_name") var sizeName: String
+    @ColumnInfo(name = "size_name") @SerializedName("size_name") var sizeName: String,
+    @ColumnInfo(name = "quantity") @SerializedName(value = "quantity") var quantity: Int
+
 
     ): Parcelable {
     constructor() : this(
-        id = 0,
         itemId = "",
         crustName = "",
         price = 0.0,
-        sizeName = ""
+        sizeName = "",
+        quantity = 0
     )
 }

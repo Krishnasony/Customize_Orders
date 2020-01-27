@@ -15,6 +15,7 @@ import i.krishnasony.customizeorders.room.entity.Size
 class OrderViewModel:ViewModel() {
     val orderLiveData:MutableLiveData<Orders> = MutableLiveData()
     val apiFailLiveData:MutableLiveData<String> = MutableLiveData()
+    lateinit var customPizzaList:LiveData<List<CustomPizza>>
     lateinit var sizelist:LiveData<List<Size>>
 
     suspend fun getOrders(repoI: OrderRepo){
@@ -48,6 +49,10 @@ class OrderViewModel:ViewModel() {
 
     suspend fun insertCustomPizza(repo: CustomizeRepo,customPizza: CustomPizza){
         repo.insertCustomPizza(customPizza)
+    }
+
+    suspend fun getCustomPizza(repo: CustomizeRepo){
+        customPizzaList = repo.getCustomPizza()
     }
 
 }
