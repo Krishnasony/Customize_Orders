@@ -7,4 +7,6 @@
     <string name="add_to_cart">Add to cart</string>
     <string name="remove">Remove</string>
     <string name="customize_pizza_title">Customize Pizza</string>
+    <string name="sizes">Sizes</string>
+    <string name="cancel">Cancel</string>
 </resources>

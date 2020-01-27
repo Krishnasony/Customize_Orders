@@ -10,6 +10,7 @@ import i.krishnasony.customizeorders.databinding.ActivityMainBinding
 import i.krishnasony.customizeorders.network.ApiService
 import i.krishnasony.customizeorders.repo.OrderRepo
 import i.krishnasony.customizeorders.room.database.AppDataBase
+import i.krishnasony.customizeorders.room.entity.Crust
 import i.krishnasony.customizeorders.ui.CustomizePizzaDialog
 import i.krishnasony.customizeorders.utils.observeOnce
 import i.krishnasony.customizeorders.utils.progressDialog
@@ -29,6 +30,7 @@ class MainActivity : AppCompatActivity() {
     private val orderViewModel:OrderViewModel by viewModel()
     private lateinit var progressBar:AlertDialog
     private var visibility = true
+    private var crustLists:ArrayList<Crust> = arrayListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +56,12 @@ class MainActivity : AppCompatActivity() {
                 order->
                 order?.let {
                     dataBinding.order = it
+                    it.crusts?.forEach {crust->
+                        crust?.let {
+                            crustLists.add(Crust(id = crust.id.toString(),name = crust.name!!,defaultSize = crust.defaultSize!!))
+
+                        }
+                    }
                     visibility = true
                     dataBinding.isVisible = visibility
                     progressBar.dismiss()
@@ -78,11 +86,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private val onAddClickListener = View.OnClickListener {
-        if (visibility){
-            val fm = supportFragmentManager
-            val customizePizzaDialog = CustomizePizzaDialog()
-            customizePizzaDialog.show(fm, CUSTOMIZE_PIZZA_DIALOG)
-        }
+        val fm = this.supportFragmentManager
+        val customizePizzaDialog = CustomizePizzaDialog.newInstance(crustLists)
+        customizePizzaDialog.retainInstance = true
+        customizePizzaDialog.showNow(fm, CUSTOMIZE_PIZZA_DIALOG)
 
     }
 
