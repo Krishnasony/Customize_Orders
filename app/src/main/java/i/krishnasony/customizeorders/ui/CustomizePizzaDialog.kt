@@ -101,7 +101,7 @@ class CustomizePizzaDialog:AppCompatDialogFragment(),ClickInterface {
         val d = dialog
         if (d != null) {
             val width = ViewGroup.LayoutParams.MATCH_PARENT
-            val height = ViewGroup.LayoutParams.MATCH_PARENT
+            val height = ViewGroup.LayoutParams.WRAP_CONTENT
             d.window?.setLayout(width, height)
         }
     }
