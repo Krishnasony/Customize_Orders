@@ -22,7 +22,7 @@ val appModule = module{
 
     single {
         Retrofit.Builder()
-            .baseUrl("https://ipsator-android-test.free.beeceptor.com/")
+            .baseUrl("https://api.myjson.com/bins/")
             .addConverterFactory(GsonConverterFactory.create())
             .client(get<OkHttpClient>())
             .build()

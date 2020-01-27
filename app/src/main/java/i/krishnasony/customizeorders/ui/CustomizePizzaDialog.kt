@@ -28,19 +28,22 @@ class CustomizePizzaDialog:AppCompatDialogFragment(),ClickInterface {
     private lateinit var rootView: View
     private var crustList:ArrayList<Crust> = arrayListOf()
     private var sizeList:ArrayList<Size> = arrayListOf()
-    private var adapter:CustomizePizzaAdapter ? = null
+    private var adapter:CrustPizzaAdapter ? = null
     private var sizeAdapter:SizeAdapter ? = null
     private val database:AppDataBase by inject()
     private val orderViewModel: OrderViewModel by viewModel()
     private var crust = Crust()
     private var size = Size()
     private var defaultCrust= ""
+    private var defaultSize = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             crustList = it.getParcelableArrayList<Crust>(CRUST) as ArrayList<Crust>
             defaultCrust = it.getString(DEFAULT_CRUST) as String
+            defaultSize = it.getString(DEFAULT_SIZE) as String
+
         }
         setStyle(DialogFragment.STYLE_NORMAL, R.style.dialog_theme)
     }
@@ -57,10 +60,11 @@ class CustomizePizzaDialog:AppCompatDialogFragment(),ClickInterface {
         sizeAdapter = SizeAdapter(this@CustomizePizzaDialog,context!!,sizeList,checkId = crust.defaultSize.toString())
         sizeRv.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
         sizeRv.adapter = sizeAdapter
-        adapter = CustomizePizzaAdapter(this,context!!,crustList,checkId = defaultCrust)
+        adapter = CrustPizzaAdapter(this,context!!,crustList,checkId = defaultCrust)
         crustRv.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
         crustRv.adapter = adapter
         crust.id = defaultCrust
+        crust.defaultSize = if (defaultSize.isNotEmpty()) defaultSize.toInt() else 0
         getSizesForCrusts()
     }
 
@@ -110,14 +114,18 @@ class CustomizePizzaDialog:AppCompatDialogFragment(),ClickInterface {
          */
         private const val CRUST = "crusts"
         private const val DEFAULT_CRUST = "default_crust"
+        private const val DEFAULT_SIZE = "default_size"
 
-        fun newInstance(crust: ArrayList<Crust>,defaultCrustCheck:String): CustomizePizzaDialog {
+
+        fun newInstance(crust: ArrayList<Crust>,defaultCrustCheck:String,defaultSizeCheck: String): CustomizePizzaDialog {
             val f = CustomizePizzaDialog()
 
             // Supply crust input as an argument.
             val args = Bundle()
             args.putParcelableArrayList(CRUST, crust)
             args.putString(DEFAULT_CRUST,defaultCrustCheck)
+            args.putString(DEFAULT_SIZE,defaultSizeCheck)
+
             f.arguments = args
 
             return f

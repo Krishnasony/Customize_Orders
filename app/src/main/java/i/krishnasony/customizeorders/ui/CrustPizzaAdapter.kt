@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.layout_recycler_item.view.*
 
 
 
-class CustomizePizzaAdapter(private val mView:ClickInterface,var context: Context,var crustList:ArrayList<Crust>,var checkId:String):RecyclerView.Adapter<CustomizePizzaAdapter.PizzaViewHolder>() {
+class CrustPizzaAdapter(private val mView:ClickInterface, var context: Context, var crustList:ArrayList<Crust>, var checkId:String):RecyclerView.Adapter<CrustPizzaAdapter.PizzaViewHolder>() {
     private var mLastSelectedPosition = -1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PizzaViewHolder {
@@ -36,7 +36,7 @@ class CustomizePizzaAdapter(private val mView:ClickInterface,var context: Contex
             position: Int
         ) {
             itemView.crust.text = crust.name
-            if ((lastSelectedPosition == -1 && position == 0))
+            if ((lastSelectedPosition == -1 && checkId == crust.id))
                 itemView.crust.isChecked = true
             else
                 itemView.crust.isChecked = lastSelectedPosition == position
@@ -44,7 +44,6 @@ class CustomizePizzaAdapter(private val mView:ClickInterface,var context: Contex
             itemView.crust.setOnClickListener {
                 mView.onRadioButtonClicked(crust)
                 mLastSelectedPosition = adapterPosition
-                itemView.crust.isChecked = true
                 notifyDataSetChanged()
             }
         }

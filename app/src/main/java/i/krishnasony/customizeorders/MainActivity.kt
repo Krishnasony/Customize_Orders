@@ -12,8 +12,11 @@ import i.krishnasony.customizeorders.repo.CustomizeRepo
 import i.krishnasony.customizeorders.repo.OrderRepo
 import i.krishnasony.customizeorders.room.database.AppDataBase
 import i.krishnasony.customizeorders.room.entity.Crust
+import i.krishnasony.customizeorders.room.entity.CustomPizza
 import i.krishnasony.customizeorders.room.entity.Size
+import i.krishnasony.customizeorders.ui.CustomPizzaListDialog
 import i.krishnasony.customizeorders.ui.CustomizePizzaDialog
+import i.krishnasony.customizeorders.utils.getRupeeFormat
 import i.krishnasony.customizeorders.utils.observeOnce
 import i.krishnasony.customizeorders.utils.progressDialog
 import i.krishnasony.customizeorders.utils.showToast
@@ -36,6 +39,8 @@ class MainActivity : AppCompatActivity() {
     private var crustLists:ArrayList<Crust> = arrayListOf()
     private var sizeList:ArrayList<Size> = arrayListOf()
     private var defaultCrust= ""
+    private var defaultSize = ""
+    private var customPizza = CustomPizza()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         dataBinding = DataBindingUtil.setContentView(this,R.layout.activity_main)
@@ -68,9 +73,21 @@ class MainActivity : AppCompatActivity() {
                     defaultCrust = order.defaultCrust.toString()
                     it.crusts?.forEach {crust->
                         crust?.let {
+                            if (crust.id.toString() == defaultCrust){
+                                defaultSize = crust.defaultSize.toString()
+                                customPizza.copy(crustName = crust.name.toString())
+                            }
                             crustLists.add(Crust(id = crust.id.toString(),name = crust.name!!,defaultSize = crust.defaultSize!!))
                             crust.sizes?.forEach {size->
                                 size?.let {
+                                    if (defaultSize == size.id.toString()){
+                                        customPizza.copy(itemId = "1",sizeName = size.name.toString(),price = size.price!!)
+                                        dataBinding.price.text = getString(R.string.price_25000).plus(customPizza.price.getRupeeFormat())
+                                        if (!checkDataBaseData){
+                                            insertCustomPizza()
+                                        }
+                                    }
+
                                     sizeList.add(Size(id = size.id.toString(),name = size.name.toString(),price = size.price!!,crustId = crust.id.toString() ))
                                 }
                             }
@@ -79,6 +96,7 @@ class MainActivity : AppCompatActivity() {
                     if (!checkDataBaseData){
                         insertCrustAndSizeList(crustLists,sizeList)
                     }
+                    getCustomPizza()
                     visibility = true
                     dataBinding.isVisible = visibility
                     progressBar.dismiss()
@@ -102,6 +120,17 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun getCustomPizza() {
+
+    }
+
+    private fun insertCustomPizza() {
+        val repo = CustomizeRepo(dao = database.customPizzaDao)
+        GlobalScope.launch(Dispatchers.IO) {
+            orderViewModel.insertCustomPizza(repo,customPizza)
+        }
+    }
+
     private fun insertCrustAndSizeList(
         crustLists: ArrayList<Crust>,
         sizeList: ArrayList<Size>
@@ -114,14 +143,16 @@ class MainActivity : AppCompatActivity() {
 
     private val onAddClickListener = View.OnClickListener {
         val fm = this.supportFragmentManager
-        val customizePizzaDialog = CustomizePizzaDialog.newInstance(crustLists,defaultCrust)
+        val customizePizzaDialog = CustomizePizzaDialog.newInstance(crustLists,defaultCrust,defaultSize)
         customizePizzaDialog.retainInstance = true
         customizePizzaDialog.showNow(fm, CUSTOMIZE_PIZZA_DIALOG)
 
     }
 
     private val onRemoveClickListener = View.OnClickListener {
-
+          val customPizzaDialog = CustomPizzaListDialog.newInstance()
+            customPizzaDialog.retainInstance = true
+          customPizzaDialog.showNow(this.supportFragmentManager, CUSTOMIZE_PIZZA_DIALOG)
     }
 
     private fun setToolbar(){

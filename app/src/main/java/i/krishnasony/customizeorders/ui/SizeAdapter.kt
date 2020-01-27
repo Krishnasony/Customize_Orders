@@ -33,7 +33,7 @@ class SizeAdapter(private var mView:ClickInterface,var context: Context, var siz
             selectedPosition: Int
         ) {
             itemView.crust.text = size.name
-            if ((selectedPosition == -1 && position == 0))
+            if ((selectedPosition == -1 && checkId == size.id))
                 itemView.crust.isChecked = true
             else
                 itemView.crust.isChecked = selectedPosition == position

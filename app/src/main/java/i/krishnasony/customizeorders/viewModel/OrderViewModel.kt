@@ -9,6 +9,7 @@ import i.krishnasony.customizeorders.network.ApiCallback
 import i.krishnasony.customizeorders.repo.CustomizeRepo
 import i.krishnasony.customizeorders.repo.OrderRepo
 import i.krishnasony.customizeorders.room.entity.Crust
+import i.krishnasony.customizeorders.room.entity.CustomPizza
 import i.krishnasony.customizeorders.room.entity.Size
 
 class OrderViewModel:ViewModel() {
@@ -43,6 +44,10 @@ class OrderViewModel:ViewModel() {
 
     suspend fun getSizesOfCrust(repo: CustomizeRepo,crustId:String){
         sizelist = repo.getSizes(crustId)
+    }
+
+    suspend fun insertCustomPizza(repo: CustomizeRepo,customPizza: CustomPizza){
+        repo.insertCustomPizza(customPizza)
     }
 
 }

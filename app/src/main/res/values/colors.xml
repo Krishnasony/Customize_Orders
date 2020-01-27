@@ -9,4 +9,5 @@
     <color name="color_black">#000000</color>
     <color name="add">#1E88E5</color>
     <color name="remove">#D50000</color>
+    <color name="color_gray">#2E2D2D</color>
 </resources>

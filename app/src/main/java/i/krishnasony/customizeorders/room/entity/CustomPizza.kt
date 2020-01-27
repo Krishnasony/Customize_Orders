@@ -13,7 +13,7 @@ data class CustomPizza(
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") @SerializedName("id") var id: Int,
     @ColumnInfo(name = "item_id") @SerializedName("item_id") var itemId: String,
     @ColumnInfo(name = "crust_name") @SerializedName("crust_name") var crustName: String,
-    @ColumnInfo(name = "quantity") @SerializedName(value = "quantity") var quantity: Int,
+    @ColumnInfo(name = "price") @SerializedName(value = "price") var price: Double,
     @ColumnInfo(name = "size_name") @SerializedName("size_name") var sizeName: String
 
     ): Parcelable {
@@ -21,7 +21,7 @@ data class CustomPizza(
         id = 0,
         itemId = "",
         crustName = "",
-        quantity = 0,
+        price = 0.0,
         sizeName = ""
     )
 }
