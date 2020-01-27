@@ -1,15 +1,20 @@
 package i.krishnasony.customizeorders.viewModel
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import i.krishnasony.customizeorders.data.Orders
 import i.krishnasony.customizeorders.network.ApiCallback
+import i.krishnasony.customizeorders.repo.CustomizeRepo
 import i.krishnasony.customizeorders.repo.OrderRepo
+import i.krishnasony.customizeorders.room.entity.Crust
+import i.krishnasony.customizeorders.room.entity.Size
 
 class OrderViewModel:ViewModel() {
     val orderLiveData:MutableLiveData<Orders> = MutableLiveData()
     val apiFailLiveData:MutableLiveData<String> = MutableLiveData()
+    lateinit var sizelist:LiveData<List<Size>>
 
     suspend fun getOrders(repoI: OrderRepo){
             repoI.getOrders(object:ApiCallback<Orders>{
@@ -26,4 +31,18 @@ class OrderViewModel:ViewModel() {
 
             })
         }
+    suspend fun insertCrustAndSize(repo: CustomizeRepo,crustList:ArrayList<Crust>,sizeList:ArrayList<Size>){
+            crustList.forEach {
+                repo.insertCrust(it)
+            }
+
+            sizeList.forEach {
+                repo.insertSize(it)
+            }
+    }
+
+    suspend fun getSizesOfCrust(repo: CustomizeRepo,crustId:String){
+        sizelist = repo.getSizes(crustId)
+    }
+
 }

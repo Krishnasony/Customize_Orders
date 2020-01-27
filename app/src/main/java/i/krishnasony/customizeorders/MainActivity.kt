@@ -8,9 +8,11 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import i.krishnasony.customizeorders.databinding.ActivityMainBinding
 import i.krishnasony.customizeorders.network.ApiService
+import i.krishnasony.customizeorders.repo.CustomizeRepo
 import i.krishnasony.customizeorders.repo.OrderRepo
 import i.krishnasony.customizeorders.room.database.AppDataBase
 import i.krishnasony.customizeorders.room.entity.Crust
+import i.krishnasony.customizeorders.room.entity.Size
 import i.krishnasony.customizeorders.ui.CustomizePizzaDialog
 import i.krishnasony.customizeorders.utils.observeOnce
 import i.krishnasony.customizeorders.utils.progressDialog
@@ -30,8 +32,10 @@ class MainActivity : AppCompatActivity() {
     private val orderViewModel:OrderViewModel by viewModel()
     private lateinit var progressBar:AlertDialog
     private var visibility = true
+    private var checkDataBaseData = false
     private var crustLists:ArrayList<Crust> = arrayListOf()
-
+    private var sizeList:ArrayList<Size> = arrayListOf()
+    private var defaultCrust= ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         dataBinding = DataBindingUtil.setContentView(this,R.layout.activity_main)
@@ -42,7 +46,12 @@ class MainActivity : AppCompatActivity() {
         }
         progressBar = this.progressDialog("Loading...")
         setToolbar()
+        checkDataBaseEntry()
         getDataFromApi()
+    }
+
+    private fun checkDataBaseEntry() {
+        checkDataBaseData = database.customPizzaDao.getCrustId()!=null
     }
 
     private fun getDataFromApi() {
@@ -56,11 +65,19 @@ class MainActivity : AppCompatActivity() {
                 order->
                 order?.let {
                     dataBinding.order = it
+                    defaultCrust = order.defaultCrust.toString()
                     it.crusts?.forEach {crust->
                         crust?.let {
                             crustLists.add(Crust(id = crust.id.toString(),name = crust.name!!,defaultSize = crust.defaultSize!!))
-
+                            crust.sizes?.forEach {size->
+                                size?.let {
+                                    sizeList.add(Size(id = size.id.toString(),name = size.name.toString(),price = size.price!!,crustId = crust.id.toString() ))
+                                }
+                            }
                         }
+                    }
+                    if (!checkDataBaseData){
+                        insertCrustAndSizeList(crustLists,sizeList)
                     }
                     visibility = true
                     dataBinding.isVisible = visibility
@@ -85,9 +102,19 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun insertCrustAndSizeList(
+        crustLists: ArrayList<Crust>,
+        sizeList: ArrayList<Size>
+    ) {
+        val repo = CustomizeRepo(dao = database.customPizzaDao)
+        GlobalScope.launch(Dispatchers.IO) {
+           orderViewModel.insertCrustAndSize(repo,crustLists,sizeList)
+        }
+    }
+
     private val onAddClickListener = View.OnClickListener {
         val fm = this.supportFragmentManager
-        val customizePizzaDialog = CustomizePizzaDialog.newInstance(crustLists)
+        val customizePizzaDialog = CustomizePizzaDialog.newInstance(crustLists,defaultCrust)
         customizePizzaDialog.retainInstance = true
         customizePizzaDialog.showNow(fm, CUSTOMIZE_PIZZA_DIALOG)
 

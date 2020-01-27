@@ -1,6 +1,7 @@
 package i.krishnasony.customizeorders
 
 import android.app.Application
+import com.facebook.stetho.Stetho
 import i.krishnasony.customizeorders.di.appModule
 import i.krishnasony.customizeorders.di.roomModule
 import org.koin.android.ext.koin.androidContext
@@ -17,6 +18,8 @@ class CustomizeOrderApplication :Application() {
             androidContext(this@CustomizeOrderApplication)
             modules(listOf(appModule, roomModule))
         }
+        Stetho.initializeWithDefaults(this)
+
 
     }
 
