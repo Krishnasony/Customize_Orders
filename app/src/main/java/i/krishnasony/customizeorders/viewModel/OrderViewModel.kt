@@ -55,4 +55,8 @@ class OrderViewModel:ViewModel() {
         customPizzaList = repo.getCustomPizza()
     }
 
+    suspend fun deleteCustomPizza(customPizza: CustomPizza,repo: CustomizeRepo){
+        repo.deleteCustomPizza(customPizza)
+    }
+
 }

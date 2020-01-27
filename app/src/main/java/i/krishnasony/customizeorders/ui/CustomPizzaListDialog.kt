@@ -26,6 +26,7 @@ class CustomPizzaListDialog : DialogFragment(),RemoveClickListener {
     private lateinit var adapter: CustomPizzaAdapter
     private var customPizzaList:ArrayList<CustomPizza> = arrayListOf()
     private val database: AppDataBase by inject()
+    private lateinit var customizeRepo: CustomizeRepo
     private val orderViewModel: OrderViewModel by viewModel()
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,6 +40,7 @@ class CustomPizzaListDialog : DialogFragment(),RemoveClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val recyclerView = rootView.findViewById<RecyclerView>(R.id.customPizzaRecyclerView)
+        customizeRepo= CustomizeRepo(database.customPizzaDao)
         adapter = CustomPizzaAdapter(this,context!!,customPizzaList)
         recyclerView.layoutManager = LinearLayoutManager(context!!,LinearLayoutManager.VERTICAL,false)
         recyclerView.adapter = adapter
@@ -46,9 +48,8 @@ class CustomPizzaListDialog : DialogFragment(),RemoveClickListener {
     }
 
     private fun getCustomPizzaList() {
-        val repo = CustomizeRepo(database.customPizzaDao)
         GlobalScope.launch(Dispatchers.Main) {
-            orderViewModel.getCustomPizza(repo)
+            orderViewModel.getCustomPizza(customizeRepo)
             orderViewModel.customPizzaList.observeOnce(this@CustomPizzaListDialog, Observer {
                 list->
                 list?.let {
@@ -63,6 +64,13 @@ class CustomPizzaListDialog : DialogFragment(),RemoveClickListener {
     override fun onItemRemoved(customPizza: CustomPizza,pos:Int) {
         customPizzaList.removeAt(pos)
         adapter.notifyDataSetChanged()
+        deleteCustomPizzaItem(customPizza)
+    }
+
+    private fun deleteCustomPizzaItem(customPizza: CustomPizza) {
+        GlobalScope.launch (Dispatchers.IO){
+            orderViewModel.deleteCustomPizza(customPizza,customizeRepo)
+        }
     }
 
 

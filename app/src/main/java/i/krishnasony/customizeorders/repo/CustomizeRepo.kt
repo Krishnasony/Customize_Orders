@@ -28,4 +28,8 @@ class CustomizeRepo(var dao:CustomPizzaDao) {
         dao.getCustomizeData(itemId = "1")
     }
 
+    suspend fun deleteCustomPizza(customPizza: CustomPizza) = withContext(Dispatchers.IO){
+        dao.delete(customPizza)
+    }
+
 }
