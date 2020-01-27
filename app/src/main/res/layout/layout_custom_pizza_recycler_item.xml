@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
     <data>
+        <import type="i.krishnasony.customizeorders.utils.StringFormat"/>
         <variable
             name="customPizza"
             type="i.krishnasony.customizeorders.room.entity.CustomPizza" />
@@ -85,7 +86,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:padding="@dimen/margin_small"
-            android:text="@{String.valueOf(`Price: `+customPizza.price)}"
+            android:text="@{String.valueOf(`Price: `+StringFormat.rupeeFormat(customPizza.price))}"
             android:textColor="@color/color_black"
             android:textSize="@dimen/normal_text"
             android:textStyle="italic|bold"

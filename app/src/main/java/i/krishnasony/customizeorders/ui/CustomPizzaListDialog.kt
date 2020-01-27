@@ -81,7 +81,7 @@ class CustomPizzaListDialog : DialogFragment(),RemoveClickListener {
     }
 
     override fun onItemRemoved(customPizza: CustomPizza,pos:Int) {
-        customPizzaList.removeAt(pos)
+        customPizzaList.remove(customPizza)
         adapter.notifyDataSetChanged()
         deleteCustomPizzaItem(customPizza)
     }
